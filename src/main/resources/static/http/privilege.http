@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:9000/api/v1/privilege
+###
+GET {{baseUrl}}
+###
+GET {{baseUrl}}/1
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name" : "test 2"
+}
+###
+PUT {{baseUrl}}/2
+Content-Type: application/json
+
+{
+  "name": "test 2 update"
+}
+###
+DELETE {{baseUrl}}/1

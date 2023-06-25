@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:9000/api/v1/role
+###
+GET {{baseUrl}}
+###
+GET {{baseUrl}}/1
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name" : "Test role test 123 456 789"
+  ,
+  "privileges" : [
+    {
+      "id" : 1
+    },
+    {
+      "id" : 2
+    }
+  ]
+}
+###
+PUT {{baseUrl}}/10
+Content-Type: application/json
+
+{
+  "name" : "Test role Update"
+  ,
+  "privileges" : [
+    {
+      "id" : 1
+    }
+    ,
+    {
+      "id" : 2
+    }
+  ]
+}
+###
+DELETE {{baseUrl}}/10
