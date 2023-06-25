@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import boilerplate.serverapp.models.Employee;
+import boilerplate.serverapp.models.dto.request.EmployeeRequest;
 import boilerplate.serverapp.services.EmployeeService;
 import lombok.AllArgsConstructor;
 
@@ -32,13 +33,13 @@ public class EmployeeController {
   }
 
   @PostMapping()
-  public Employee create(@RequestBody Employee employee) {
-    return employeeService.create(employee);
+  public Employee create(@RequestBody EmployeeRequest employeeRequest) {
+    return employeeService.create(employeeRequest);
   }
 
   @PutMapping("/{id}")
-  public Employee update(@PathVariable Integer id, @RequestBody Employee employee) {
-    return employeeService.update(id, employee);
+  public Employee update(@PathVariable Integer id, @RequestBody EmployeeRequest employeeRequest) {
+    return employeeService.update(id, employeeRequest);
   }
 
   @DeleteMapping("/{id}")

@@ -1,8 +1,9 @@
 package boilerplate.serverapp.services;
 
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import boilerplate.serverapp.models.Employee;
 import boilerplate.serverapp.models.User;
+import boilerplate.serverapp.models.dto.request.EmployeeRequest;
 import boilerplate.serverapp.repositories.EmployeeRepository;
 import lombok.AllArgsConstructor;
 
@@ -18,18 +20,7 @@ import lombok.AllArgsConstructor;
 public class EmployeeService {
   private EmployeeRepository employeeRepository;
   private PasswordEncoder passwordEncoder;
-
-  public Boolean emailValidation(String email) {
-    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-        "[a-zA-Z0-9_+&*-]+)*@" +
-        "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-        "A-Z]{2,7}$";
-
-    Pattern pat = Pattern.compile(emailRegex);
-    if (email == null)
-      return false;
-    return pat.matcher(email).matches();
-  }
+  private ModelMapper modelMapper;
 
   public boolean emailChecker(Integer id, String email) {
     if (id != null) {
@@ -49,40 +40,56 @@ public class EmployeeService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found!!!"));
   }
 
-  public Employee create(Employee employee) {
-    if (!emailValidation(employee.getEmail())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email not valid!!!");
-    }
+  public Employee create(EmployeeRequest employeeRequest) {
+    Employee employee = modelMapper.map(employeeRequest, Employee.class);
+    User user = modelMapper.map(employeeRequest, User.class);
+
     if (emailChecker(null, employee.getEmail()))
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!!!");
 
-    if (employee.getUser() != null) {
-      User user = employee.getUser();
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
+    if (employeeRequest.getManagerId() != null) {
+      employee.setManager(getById(employeeRequest.getManagerId()));
+    }
+    if (user.getUsername() != null) {
       employee.setUser(user);
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+      user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
       user.setEmployee(employee);
     }
     employeeRepository.save(employee);
     return employee;
   }
 
-  public Employee update(Integer id, Employee employee) {
-    if (!emailValidation(employee.getEmail())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email not valid!!!");
-    }
-    Employee oldEmployee = getById(id);
-    employee.setId(id);
-    if (emailChecker(id, employee.getEmail()))
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!!!");
+  public Employee update(Integer id, EmployeeRequest employeeRequest) {
+    Employee employee = modelMapper.map(employeeRequest, Employee.class);
+    User user = modelMapper.map(employeeRequest, User.class);
 
-    if (employee.getUser() != null) {
-      User user = employee.getUser();
-      employee.setUser(user);
-      user.setId(id);
-      user.setPassword(oldEmployee.getUser().getPassword());
-      user.setRoles(oldEmployee.getUser().getRoles());
-      user.setEmployee(employee);
+    Employee oldEmployee = getById(id);
+
+    employee.setId(id);
+    user.setId(id);
+
+    if (employeeRequest.getManagerId() == id) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee cannot be it's own manager'");
     }
+
+    if (emailChecker(id, employee.getEmail())) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!!!");
+    }
+
+    user.setPassword(oldEmployee.getUser().getPassword());
+    user.setCreatedAt(oldEmployee.getUser().getCreatedAt());
+    user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    if (user.getRoles() == null) {
+      user.setRoles(oldEmployee.getUser().getRoles());
+    }
+
+    if (employeeRequest.getManagerId() != null) {
+      employee.setManager(getById(employeeRequest.getManagerId()));
+    } else {
+      employee.setManager(oldEmployee.getManager());
+    }
+    employee.setUser(user);
     employeeRepository.save(employee);
     return employee;
   }

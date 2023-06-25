@@ -39,7 +39,12 @@ public class PrivilegeService {
 
   public Privilege delete(Integer id) {
     Privilege privilege = getById(id);
-    privilegeRepository.delete(privilege);
-    return privilege;
+    try {
+      privilegeRepository.delete(privilege);
+      return privilege;
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to delete privilege!!!");
+    }
   }
 }

@@ -8,7 +8,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name" : "Test role test 123 456 789"
+  "name" : "role 3"
   ,
   "privileges" : [
     {
@@ -20,11 +20,11 @@ Content-Type: application/json
   ]
 }
 ###
-PUT {{baseUrl}}/10
+PUT {{baseUrl}}/1
 Content-Type: application/json
 
 {
-  "name" : "Test role Update"
+  "name" : "role 1 update"
   ,
   "privileges" : [
     {
@@ -37,4 +37,4 @@ Content-Type: application/json
   ]
 }
 ###
-DELETE {{baseUrl}}/10
+DELETE {{baseUrl}}/1

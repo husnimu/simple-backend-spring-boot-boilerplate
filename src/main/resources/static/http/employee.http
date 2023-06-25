@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:9000/api/v1/employee
+###
+GET {{baseUrl}}
+###
+GET {{baseUrl}}/12
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name" : "test2",
+  "email" : "test2@mail.com",
+  "phone" : "test",
+  "salary" : 1.23,
+  "managerId" : 1,
+  "username" : "test2",
+  "password" : "test2"
+}
+###
+PUT {{baseUrl}}/12
+Content-Type: application/json
+
+{
+  "name" : "test12",
+  "email" : "test12@mail.com",
+  "phone" : "test12",
+  "salary" : 1.23,
+  "managerId" : null,
+  "username" : "test12",
+  "password" : "test12"
+}
+###
+DELETE {{baseUrl}}/7

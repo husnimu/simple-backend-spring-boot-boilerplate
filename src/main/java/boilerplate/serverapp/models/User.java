@@ -40,7 +40,7 @@ public class User {
   private boolean isCredentialsNonExpired = true;
   private boolean isEnabled = true;
 
-  private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+  private Timestamp createdAt;
   private Timestamp updatedAt;
 
   @OneToOne

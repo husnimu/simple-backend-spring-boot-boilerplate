@@ -10,6 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,19 +29,23 @@ public class Employee {
   private Integer id;
 
   @Column(nullable = false)
+  @NotBlank(message = "Name is mandatory")
   private String name;
 
   @Column(nullable = true, unique = true)
+  @NotBlank(message = "Email is mandatory")
+  @Email
   private String email;
 
   @Column(nullable = true, length = 13)
   private String phone;
 
   @Column(nullable = true, length = 5)
-  private Long salary;
+  private Double salary;
 
   @ManyToOne
   @JoinColumn(name = "manager_id")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Employee manager;
 
   @PrimaryKeyJoinColumn

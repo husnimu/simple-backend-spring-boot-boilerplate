@@ -8,7 +8,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name" : "test 2"
+"name" : "test 4"
 }
 ###
 PUT {{baseUrl}}/2

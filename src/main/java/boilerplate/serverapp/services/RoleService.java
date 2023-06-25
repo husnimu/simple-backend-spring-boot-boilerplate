@@ -72,8 +72,13 @@ public class RoleService {
 
   public Role delete(Integer id) {
     Role role = getById(id);
-    role.setPrivileges(null);
-    roleRepository.delete(role);
-    return role;
+    try {
+      role.setPrivileges(null);
+      roleRepository.delete(role);
+      return role;
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to delete employee!!!");
+    }
   }
 }
