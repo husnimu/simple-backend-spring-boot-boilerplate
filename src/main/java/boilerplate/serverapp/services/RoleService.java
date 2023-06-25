@@ -72,6 +72,7 @@ public class RoleService {
 
   public Role delete(Integer id) {
     Role role = getById(id);
+    role.setPrivileges(null);
     roleRepository.delete(role);
     return role;
   }
