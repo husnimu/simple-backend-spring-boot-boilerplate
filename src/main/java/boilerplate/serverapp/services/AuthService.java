@@ -31,7 +31,7 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(auth);
 
     User user = userRepository
-        .findByUsernameOrEmployeeEmail(loginRequest.getUsername(), loginRequest.getUsername())
+        .findByUsernameOrEmail(loginRequest.getUsername(), loginRequest.getUsername())
         .get();
 
     UserDetails userDetails = appUserDetailService.loadUserByUsername(
@@ -40,6 +40,6 @@ public class AuthService {
     List<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority())
         .collect(Collectors.toList());
 
-    return new LoginResponse(user.getUsername(), user.getEmployee().getEmail(), authorities);
+    return new LoginResponse(user.getUsername(), user.getEmail(), authorities);
   }
 }

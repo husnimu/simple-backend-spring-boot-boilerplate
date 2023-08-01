@@ -15,8 +15,5 @@ public class UserRequest {
   private String password;
   private String name;
   private String email;
-  private String phone;
-  private Double salary;
-  private Integer managerId;
   private List<Role> roles;
 }
